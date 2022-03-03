@@ -2,50 +2,41 @@
 # You can use any algorithm we discussed in the lectures. 
 # Note that this is equivalent to solving the shortest path problem.
 
-from algorithm import *
-from common import print_result
 from queue import PriorityQueue
-from data import G, Dist, Coord, Cost
+from common import *
+from data import *
 
-def dijikstra(source, destination):
-    pq = PriorityQueue()
-    dist = {key: MAX_INT() for key in Coord }
-    cost = {key: MAX_INT() for key in Coord }
-    parent = { key: "-1" for key in Coord }
+def uniform_cost_search():
+    pq      = PriorityQueue()
+    min_dist  = { key: float("inf") for key in Coord }
+    min_cost  = { key: float("inf") for key in Coord }
 
-    source_idx = source
-    destination_idx = destination
+    pq.put((0, 0, 0, START_NODE, []))
 
-    node = Node(0, source_idx)
-    dist[source_idx] = 0
-    cost[source_idx] = 0
-    parent[source_idx] = "-1"
+    while not pq.empty():
+        priority, node_dist, node_cost, node, path_to_node = pq.get()
+        
+        if node == END_NODE:
+            min_path = path_to_node
+            break
 
-    pq.put(node)
+        for neighbour in get_neighbours(node):
+            distance = node_dist + get_dist(node, neighbour)
+            energy_cost = node_cost + get_energy_cost(node, neighbour)
 
-    while pq.empty() is False:
-        node = pq.get()
-        neighbours = G[node.item]
+            if distance < min_dist[neighbour] or energy_cost < min_cost[neighbour]:
+                min_dist[neighbour] = distance
+                min_cost[neighbour] = energy_cost
 
-        for v in neighbours:
-            weight = Dist[f"{node.item},{v}"]
+                new_path = path_to_node.copy()
+                new_path.append(neighbour)
 
-            if(dist[v] > dist[node.item] + weight):
-                dist[v] = dist[node.item] + weight
-                cost[v] = cost[node.item] + Cost[f"{node.item},{v}"]
-                parent[v] = node.item
+                new_priority = distance
+                pq.put((new_priority, distance, energy_cost, neighbour, new_path))
 
-                pq.put(Node(priority=dist[v], item=v))
-
-    path = get_path(parent=parent, dest=destination_idx, path=[])
-
-    return ShortestPath(
-        source=source_idx, 
-        destination=destination_idx, 
-        total_distance=dist[destination_idx],
-        total_energy=cost[destination_idx],
-        path=path)
+    path = min_path
+    return ShortestPath(source=START_NODE, destination=END_NODE, total_distance=node_dist, total_energy=node_cost, path=path)
 
 def task_one():
-    result = dijikstra(source="1", destination="50")
-    print_result(result, filename="task_1_output")
+    result, elapsed = perf_profile(uniform_cost_search)
+    print_result(result, elapsed, "1")
