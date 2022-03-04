@@ -8,7 +8,6 @@ def uniform_cost_search():
     pq      = PriorityQueue()
     min_dist  = { key: float("inf") for key in Coord }
     min_cost  = { key: float("inf") for key in Coord }
-    min_path = []
 
     pq.put((0, 0, 0, START_NODE, []))
 
@@ -16,8 +15,9 @@ def uniform_cost_search():
         priority, node_dist, node_cost, node, path_to_node = pq.get()
 
         if node == END_NODE:
-            min_path = path_to_node
-            break
+            return ShortestPath(total_distance=node_dist, 
+                                total_energy=node_cost, 
+                                path=path_to_node)
 
         for neighbour in get_neighbours(node):
             distance = node_dist + get_dist(node, neighbour)
@@ -35,8 +35,6 @@ def uniform_cost_search():
 
                 new_priority = distance
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
-
-    return ShortestPath(source=START_NODE, destination=END_NODE, total_distance=min_dist[END_NODE], total_energy=min_cost[END_NODE], path=min_path)
 
 def task_two():
     result, elapsed = perf_profile(uniform_cost_search)

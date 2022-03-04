@@ -2,4 +2,4 @@ Shortest path: 1->1363->1358->1357->1356->1276->1273->1277->1269->1267->1268->12
 Shortest distance: 148648.64
 Total energy cost: 294853
 
-Time Taken: 0.418s
+Time Taken: 0.417s

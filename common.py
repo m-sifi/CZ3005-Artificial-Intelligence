@@ -5,15 +5,8 @@ import sys
 from time import perf_counter
 from data import *
 
-# Constexpr function
-def MAX_INT():
-    return 999999999999
-    
 @dataclass
 class ShortestPath():
-    source: str
-    destination: str
-
     total_energy: int
     total_distance: float
 
@@ -22,7 +15,7 @@ class ShortestPath():
     # Prints the Shortest Path result in the format that is recommended in the Lab Manual
     def __str__(self):
         path = "->".join([node for node in self.path])
-        path_str = f"Shortest path: {self.source}->{path}"
+        path_str = f"Shortest path: {START_NODE}->{path}"
         dist_str = f"Shortest distance: {self.total_distance:.2f}"
         energy_str = f"Total energy cost: {self.total_energy}"
 

@@ -1,10 +1,10 @@
 # Task 3: You will need to develop an A* search algorithm to solve the NYC instance. The key is to develop a suitable heuristic function for the A* search algorithm in this setting.
-from math import dist
 from common import *
 from queue import PriorityQueue
 from data import *
 
-# calculates the heuristic between 2 nodes by computing eucledian distance
+from math import dist
+
 def eucledian_distance(start, end):
     start_pos = Coord[start]
     end_pos = Coord[end]
@@ -15,7 +15,6 @@ def a_star():
     pq      = PriorityQueue()
     min_dist  = { key: float("inf") for key in Coord }
     min_cost  = { key: float("inf") for key in Coord }
-    min_path = []
 
     pq.put((0, 0, 0, START_NODE, []))
 
@@ -23,8 +22,9 @@ def a_star():
         priority, node_dist, node_cost, node, path_to_node = pq.get()
 
         if node == END_NODE:
-            min_path = path_to_node
-            break
+            return ShortestPath(total_distance=node_dist, 
+                                total_energy=node_cost, 
+                                path=path_to_node)
 
         for neighbour in get_neighbours(node):
             distance = node_dist + get_dist(node, neighbour)
@@ -42,8 +42,6 @@ def a_star():
 
                 new_priority = distance + eucledian_distance(neighbour, END_NODE)
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
-
-    return ShortestPath(source=START_NODE, destination=END_NODE, total_distance=min_dist[END_NODE], total_energy=min_cost[END_NODE], path=min_path)
 
 def task_three():
     result, elapsed = perf_profile(a_star)

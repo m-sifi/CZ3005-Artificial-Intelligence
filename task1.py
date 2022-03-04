@@ -17,8 +17,9 @@ def uniform_cost_search():
         priority, node_dist, node_cost, node, path_to_node = pq.get()
         
         if node == END_NODE:
-            min_path = path_to_node
-            break
+            return ShortestPath(total_distance=node_dist, 
+                                total_energy=node_cost, 
+                                path=path_to_node)
 
         for neighbour in get_neighbours(node):
             distance = node_dist + get_dist(node, neighbour)
@@ -33,9 +34,6 @@ def uniform_cost_search():
 
                 new_priority = distance
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
-
-    path = min_path
-    return ShortestPath(source=START_NODE, destination=END_NODE, total_distance=node_dist, total_energy=node_cost, path=path)
 
 def task_one():
     result, elapsed = perf_profile(uniform_cost_search)
