@@ -1,6 +1,4 @@
-# Task 1: You will need to solve a relaxed version of the NYC instance where we do not have the energy constraint. 
-# You can use any algorithm we discussed in the lectures. 
-# Note that this is equivalent to solving the shortest path problem.
+# # Task 2: You will need to implement an uninformed search algorithm (e.g., the DFS, BFS, UCS) to solve the NYC instance.
 
 from queue import PriorityQueue
 from common import *
@@ -15,7 +13,7 @@ def uniform_cost_search():
     while not pq.empty():
         priority, node_dist, node_cost, node, path_to_node = pq.get()
         visited.add(node)
-        
+
         if node == END_NODE:
             return ShortestPath(total_distance=node_dist, 
                                 total_energy=node_cost, 
@@ -25,6 +23,9 @@ def uniform_cost_search():
             distance = node_dist + get_dist(node, neighbour)
             energy_cost = node_cost + get_energy_cost(node, neighbour)
 
+            if energy_cost > ENERGY_BUDGET:
+                continue
+
             if neighbour not in visited:
                 new_path = path_to_node.copy()
                 new_path.append(neighbour)
@@ -32,6 +33,6 @@ def uniform_cost_search():
                 new_priority = distance
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
 
-def task_one():
+def naive():
     result, elapsed = perf_profile(uniform_cost_search)
-    print_result(result, elapsed, "Task1")
+    print_result(result, elapsed, "Task2_UCS_Naive")

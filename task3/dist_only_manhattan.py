@@ -3,18 +3,15 @@ from common import *
 from queue import PriorityQueue
 from data import *
 
-from math import dist
-
-def eucledian_distance(start, end):
+def manhattan_distance(start, end):
     start_pos = Coord[start]
     end_pos = Coord[end]
 
-    return dist(start_pos, end_pos)
+    return abs(start_pos[0] - end_pos[0]) + abs(start_pos[1] - end_pos[1])
 
 def a_star():
     pq      = PriorityQueue()
     min_dist  = { key: float("inf") for key in Coord }
-    min_cost  = { key: float("inf") for key in Coord }
 
     pq.put((0, 0, 0, START_NODE, []))
 
@@ -33,16 +30,15 @@ def a_star():
             if energy_cost > ENERGY_BUDGET:
                 continue
 
-            if distance < min_dist[neighbour] or energy_cost < min_cost[neighbour]:
+            if distance < min_dist[neighbour]:
                 min_dist[neighbour] = distance
-                min_cost[neighbour] = energy_cost
 
                 new_path = path_to_node.copy()
                 new_path.append(neighbour)
 
-                new_priority = distance + eucledian_distance(neighbour, END_NODE)
+                new_priority = distance + manhattan_distance(neighbour, END_NODE)
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
 
-def task_three():
+def dist_only_manhattan():
     result, elapsed = perf_profile(a_star)
-    print_result(result, elapsed, "3_ASTAR")
+    print_result(result, elapsed, "Task3_Dist_Manhattan")

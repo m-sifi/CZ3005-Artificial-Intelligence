@@ -26,7 +26,7 @@ def uniform_cost_search():
             if energy_cost > ENERGY_BUDGET:
                 continue
 
-            if distance < min_dist[neighbour] or energy_cost < min_cost[neighbour]:
+            if distance < min_dist[neighbour] and energy_cost < min_cost[neighbour]:
                 min_dist[neighbour] = distance
                 min_cost[neighbour] = energy_cost
 
@@ -36,6 +36,6 @@ def uniform_cost_search():
                 new_priority = distance
                 pq.put((new_priority, distance, energy_cost, neighbour, new_path))
 
-def task_two():
+def distance_and_cost():
     result, elapsed = perf_profile(uniform_cost_search)
-    print_result(result, elapsed, "2_UCS")
+    print_result(result, elapsed, "Task2_UCS_Distance_AND_Cost")
